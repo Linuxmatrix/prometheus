@@ -96,13 +96,22 @@ else
         Print "NL" "Failed to add user" "R"
         exit 1
 fi
-mkdir /etc/prometheus && mkdir /var/lib/prometheus 
-
-
-chown prometheus:prometheus /etc/prometheus && chown prometheus:prometheus /var/lib/prometheus
-
+Print "SL" "=>> Creating  prometheus directory under etc & var/lib   . .. " "B"
+mkdir /etc/prometheus && mkdir /var/lib/prometheus && chown prometheus:prometheus /etc/prometheus && chown prometheus:prometheus /var/lib/prometheus
+if [ $? -eq 0 ] ; then
+                Print "NL" " created directory successfully...." "G"
+else
+        Print "NL" "Failed to create directory" "R"
+        exit 1
+fi
+Print "SL" "=>> copying prometheus binary and lib files  . .. " "B"
 cd prometheus-2.8.1.linux-amd64 && mv consoles/ console_libraries/ /etc/prometheus/ && mv prometheus.yml /etc/prometheus/
-
+if [ $? -eq 0 ] ; then
+                Print "NL" " copying prometheus binary and lib files is completed  successfully...." "G"
+else
+        Print "NL" "Failed to copy prometheus binaty and lib files " "R"
+        exit 1
+fi
 Print "SL" "=>> Creating  prometheus.service file under systemd. .. " "B"
 cat <<EOD >> /etc/systemd/system/prometheus.service
 
